@@ -73,7 +73,7 @@ const Index = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-            YO!!!!! This is your Boss, Dee101 Aka Lazygamer17
+            AI-powered hiring that understands your JD, your culture, and your urgency.
             <br />
             We source, screen, and deliver candidates you'll actually want to interview.
           </p>
