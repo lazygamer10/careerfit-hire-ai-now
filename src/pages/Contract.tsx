@@ -157,7 +157,7 @@ const Contract = () => {
               <Checkbox
                 id="terms"
                 checked={agreed}
-                onCheckedChange={setAgreed}
+                onCheckedChange={(checked) => setAgreed(checked === true)}
                 className="mt-1"
               />
               <div className="text-sm text-slate-600">
