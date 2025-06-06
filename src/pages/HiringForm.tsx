@@ -24,7 +24,7 @@ const HiringForm = () => {
         <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-md">
           <CardHeader>
             <CardTitle className="text-2xl text-center text-slate-800">
-              Tell Us About Your Hiring Needs
+              Tell Us About Your Hiring Need
             </CardTitle>
           </CardHeader>
           <CardContent className="p-8">
