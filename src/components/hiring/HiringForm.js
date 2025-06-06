@@ -14,7 +14,7 @@ export default function HiringForm() {
   const [jobDescription, setJobDescription] = useState("");
   const [budget, setBudget] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = {
       companyName,
