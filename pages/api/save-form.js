@@ -1,42 +1,44 @@
-console.log("🔥 API called");
 import * as XLSX from "xlsx";
-console.log("✅ File write attempted");
 import fs from "fs";
 import path from "path";
 
 export default function handler(req, res) {
-  if (req.method === "POST") {
-    const formData = req.body;
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Only POST allowed" });
+  }
 
-    const filePath = path.join(process.cwd(), "public", "submissions.xlsx");
+  console.log("🔥 API HIT");
 
-    const sheetName = "Submissions";
+  const formData = req.body;
+  const filePath = path.join(process.cwd(), "public", "submissions.xlsx");
+  const sheetName = "Submissions";
+  let data = [];
 
-    let data = [];
-
-    // If file exists, read existing data
+  try {
     if (fs.existsSync(filePath)) {
+      console.log("📄 File exists, reading...");
       const workbook = XLSX.readFile(filePath);
       const worksheet = workbook.Sheets[sheetName];
       if (worksheet) {
         data = XLSX.utils.sheet_to_json(worksheet);
       }
       data.push(formData);
-      const newWorksheet = XLSX.utils.json_to_sheet(data);
-      workbook.Sheets[sheetName] = newWorksheet;
+      const newSheet = XLSX.utils.json_to_sheet(data);
+      workbook.Sheets[sheetName] = newSheet;
       XLSX.writeFile(workbook, filePath);
     } else {
-      // Create new workbook and sheet
+      console.log("🆕 File doesn't exist, creating new...");
       data.push(formData);
-      const newWorkbook = XLSX.utils.book_new();
-      const newWorksheet = XLSX.utils.json_to_sheet(data);
-      XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, sheetName);
-      XLSX.writeFile(newWorkbook, filePath);
+      const newSheet = XLSX.utils.json_to_sheet(data);
+      const newBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(newBook, newSheet, sheetName);
+      XLSX.writeFile(newBook, filePath);
     }
 
-    console.log("✅ Excel file updated at:", filePath);
-    res.status(200).json({ message: "Form data saved to Excel!" });
-  } else {
-    res.status(405).json({ error: "Only POST method allowed" });
+    console.log("✅ File written:", filePath);
+    return res.status(200).json({ message: "Form saved to Excel" });
+  } catch (err) {
+    console.error("❌ Error:", err);
+    return res.status(500).json({ error: "Failed to write Excel file" });
   }
 }
