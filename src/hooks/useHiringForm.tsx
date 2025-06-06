@@ -28,9 +28,26 @@ export const useHiringForm = () => {
     budget: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem("hiringFormData", JSON.stringify(formData));
+    
+    try {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbwLga2jgq_szapRNGcyHMBUGrk31khkBw2T6NVOYB_vmt83hq4TSaG0vMF8_amEljhaxQ/exec", {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await res.json();
+      console.log("https://script.google.com/macros/s/AKfycbwLga2jgq_szapRNGcyHMBUGrk31khkBw2T6NVOYB_vmt83hq4TSaG0vMF8_amEljhaxQ/exec", result);
+      alert("Form submitted successfully!");
+    } catch (err) {
+      console.error("❌ Error:", err);
+      alert("Failed to submit form.");
+    }
     navigate("/plan");
   };
 
