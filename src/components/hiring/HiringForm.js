@@ -29,7 +29,7 @@ export default function HiringForm() {
     };
 
     try {
-      const res = await fetch("YOUR_GOOGLE_WEB_APP_URL", {
+      const res = await fetch("https://script.google.com/a/macros/careerfit.ai/s/AKfycbxBPHttdLfYEkcDpVxV0WwBE1CVCEiasJLbw_4q18aW38Y9n4OTUO55TiuI9vUYDVHNxA/exec", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {
