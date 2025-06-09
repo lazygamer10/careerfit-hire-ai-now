@@ -64,56 +64,26 @@ export const useHiringForm = () => {
     // Save to localStorage first
     localStorage.setItem("hiringFormData", JSON.stringify(formData));
     
-    let googleSheetsSuccess = false;
-    let excelSuccess = false;
-
-    // Try to submit to Google Sheets
+    // Submit to Google Sheets via Excel service
     try {
-      console.log("Attempting Google Sheets submission...");
-      const res = await fetch("https://script.google.com/macros/s/AKfycbwLga2jgq_szapRNGcyHMBUGrk31khkBw2T6NVOYB_vmt83hq4TSaG0vMF8_amEljhaxQ/exec", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (res.ok) {
-        const result = await res.json();
-        console.log("✅ Google Sheets response:", result);
-        googleSheetsSuccess = true;
-      } else {
-        console.error("❌ Google Sheets HTTP error:", res.status, res.statusText);
-      }
-    } catch (err) {
-      console.error("❌ Google Sheets Error:", err);
-    }
-
-    // Try to submit to Excel
-    try {
-      console.log("Attempting Excel submission...");
+      console.log("Attempting Google Sheets submission via Excel service...");
       const excelData = {
         ...formData,
         submittedAt: new Date().toISOString()
       };
-      excelSuccess = await submitToExcel(excelData);
-      console.log("Excel submission result:", excelSuccess);
-    } catch (err) {
-      console.error("❌ Excel submission error:", err);
-    }
-
-    // Show appropriate success/error message
-    if (googleSheetsSuccess || excelSuccess) {
-      const successServices = [];
-      if (googleSheetsSuccess) successServices.push("Google Sheets");
-      if (excelSuccess) successServices.push("Excel");
+      const success = await submitToExcel(excelData);
       
-      toast.success(`Form submitted successfully to: ${successServices.join(", ")}!`);
-      console.log("✅ Form submission successful, navigating to plan page...");
-      navigate("/plan");
-    } else {
-      toast.error("Failed to submit form to any service. Your data has been saved locally.");
-      console.error("❌ All submission methods failed");
+      if (success) {
+        toast.success("Form submitted successfully to Google Sheets!");
+        console.log("✅ Form submission successful, navigating to plan page...");
+        navigate("/plan");
+      } else {
+        toast.error("Failed to submit form. Your data has been saved locally.");
+        console.error("❌ Form submission failed");
+      }
+    } catch (err) {
+      console.error("❌ Form submission error:", err);
+      toast.error("Failed to submit form. Your data has been saved locally.");
     }
 
     setIsSubmitting(false);

@@ -13,15 +13,10 @@ export interface ExcelSubmissionData {
 }
 
 export const submitToExcel = async (formData: ExcelSubmissionData): Promise<boolean> => {
-  // TODO: Replace this URL with your actual Excel API endpoint
   const EXCEL_API_URL = "https://script.google.com/macros/s/AKfycbziwYr0MUEdyrPo-C-xvebwf1YnoJPDTm1VHseKdzLEdLEJpoFId1XYYhMs56Jz9zDt8Q/exec";
   
-  if (EXCEL_API_URL === "https://script.google.com/macros/s/AKfycbziwYr0MUEdyrPo-C-xvebwf1YnoJPDTm1VHseKdzLEdLEJpoFId1XYYhMs56Jz9zDt8Q/exec") {
-    console.log("⚠️ Excel API URL not configured yet");
-    console.log("Form data that would be sent to Excel:", formData);
-    // Return true to simulate success for development
-    return true;
-  }
+  console.log("Submitting to Google Sheets:", EXCEL_API_URL);
+  console.log("Form data being sent:", formData);
 
   try {
     const response = await fetch(EXCEL_API_URL, {
@@ -33,14 +28,14 @@ export const submitToExcel = async (formData: ExcelSubmissionData): Promise<bool
     });
 
     if (!response.ok) {
-      throw new Error(`Excel API error: ${response.status}`);
+      throw new Error(`Google Sheets API error: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log("✅ Data successfully stored in Excel:", result);
+    console.log("✅ Data successfully stored in Google Sheets:", result);
     return true;
   } catch (error) {
-    console.error("❌ Failed to store data in Excel:", error);
+    console.error("❌ Failed to store data in Google Sheets:", error);
     return false;
   }
 };
