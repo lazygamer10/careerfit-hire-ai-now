@@ -73,7 +73,7 @@ const HiringForm = () => {
       </div>
 
       <MobileCTA 
-        onSubmit={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)} 
+        onSubmit={() => handleSubmit()} 
         isSubmitting={isSubmitting}
       />
     </div>

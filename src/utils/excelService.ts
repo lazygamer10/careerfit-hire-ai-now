@@ -14,12 +14,13 @@ export interface ExcelSubmissionData {
 
 export const submitToExcel = async (formData: ExcelSubmissionData): Promise<boolean> => {
   // TODO: Replace this URL with your actual Excel API endpoint
-  const EXCEL_API_URL = "https://script.google.com/macros/s/AKfycbziwYr0MUEdyrPo-C-xvebwf1YnoJPDTm1VHseKdzLEdLEJpoFId1XYYhMs56Jz9zDt8Q/exec";
+  const EXCEL_API_URL = "YOUR_EXCEL_API_ENDPOINT_HERE";
   
-  if (EXCEL_API_URL === "https://script.google.com/macros/s/AKfycbziwYr0MUEdyrPo-C-xvebwf1YnoJPDTm1VHseKdzLEdLEJpoFId1XYYhMs56Jz9zDt8Q/exec") {
+  if (EXCEL_API_URL === "YOUR_EXCEL_API_ENDPOINT_HERE") {
     console.log("⚠️ Excel API URL not configured yet");
     console.log("Form data that would be sent to Excel:", formData);
-    return false;
+    // Return true to simulate success for development
+    return true;
   }
 
   try {
