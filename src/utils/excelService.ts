@@ -13,7 +13,7 @@ export interface ExcelSubmissionData {
 }
 
 export const submitToExcel = async (formData: ExcelSubmissionData): Promise<boolean> => {
-  const EXCEL_API_URL = "https://script.google.com/macros/s/AKfycbziwYr0MUEdyrPo-C-xvebwf1YnoJPDTm1VHseKdzLEdLEJpoFId1XYYhMs56Jz9zDt8Q/exec";
+  const EXCEL_API_URL = "https://script.google.com/macros/s/AKfycbyJSZSsvaCvDfDNJQP_7ysjRbXSxQoHftEA-AB5t6DHqtWugVTnNT1JpsxtnGaAtQP9/exec";
   
   console.log("Submitting to Google Sheets:", EXCEL_API_URL);
   console.log("Form data being sent:", formData);
