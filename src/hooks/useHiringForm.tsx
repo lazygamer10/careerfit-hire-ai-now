@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { submitToExcel } from "@/utils/excelService";
+import { toast } from "sonner";
 
 export interface HiringFormData {
   companyName: string;
@@ -16,6 +18,7 @@ export interface HiringFormData {
 
 export const useHiringForm = () => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<HiringFormData>({
     companyName: "",
     name: "",
@@ -30,8 +33,15 @@ export const useHiringForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Save to localStorage first
     localStorage.setItem("hiringFormData", JSON.stringify(formData));
     
+    let googleSheetsSuccess = false;
+    let excelSuccess = false;
+
+    // Try to submit to Google Sheets (existing functionality)
     try {
       const res = await fetch("https://script.google.com/macros/s/AKfycbwLga2jgq_szapRNGcyHMBUGrk31khkBw2T6NVOYB_vmt83hq4TSaG0vMF8_amEljhaxQ/exec", {
         method: "POST",
@@ -42,12 +52,35 @@ export const useHiringForm = () => {
       });
 
       const result = await res.json();
-      console.log("https://script.google.com/macros/s/AKfycbwLga2jgq_szapRNGcyHMBUGrk31khkBw2T6NVOYB_vmt83hq4TSaG0vMF8_amEljhaxQ/exec", result);
-      alert("Form submitted successfully!");
+      console.log("Google Sheets response:", result);
+      googleSheetsSuccess = true;
     } catch (err) {
-      console.error("❌ Error:", err);
-      alert("Failed to submit form.");
+      console.error("❌ Google Sheets Error:", err);
     }
+
+    // Try to submit to Excel
+    try {
+      const excelData = {
+        ...formData,
+        submittedAt: new Date().toISOString()
+      };
+      excelSuccess = await submitToExcel(excelData);
+    } catch (err) {
+      console.error("❌ Excel submission error:", err);
+    }
+
+    // Show appropriate success/error message
+    if (googleSheetsSuccess || excelSuccess) {
+      const successMessage = [];
+      if (googleSheetsSuccess) successMessage.push("Google Sheets");
+      if (excelSuccess) successMessage.push("Excel");
+      
+      toast.success(`Form submitted successfully to: ${successMessage.join(", ")}!`);
+    } else {
+      toast.error("Failed to submit form. Please try again.");
+    }
+
+    setIsSubmitting(false);
     navigate("/plan");
   };
 
@@ -58,6 +91,7 @@ export const useHiringForm = () => {
   return {
     formData,
     handleSubmit,
-    handleInputChange
+    handleInputChange,
+    isSubmitting
   };
 };
